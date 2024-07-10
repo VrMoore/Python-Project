@@ -9,6 +9,7 @@
     # pkgs.go
     # pkgs.python311
     pkgs.python312
+    pkgs.python-launcher
     # pkgs.python311Packages.pip
     # pkgs.nodejs_20
     # pkgs.nodePackages.nodemon
@@ -20,6 +21,8 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       # "vscodevim.vim"
+      "ms-python.debugpy"
+      "ms-python.python"
     ];
 
     # Enable previews

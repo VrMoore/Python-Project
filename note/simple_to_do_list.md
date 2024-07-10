@@ -1,0 +1,4 @@
+- Make TaskAdd that can add new task
+- Make while loop so when user give yes answer, it'll update the list
+- Make taskDelete to delete given spesific number (by index)
+- Make taskExit to exit the loop
