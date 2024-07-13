@@ -5,6 +5,7 @@ This is my simple project build with python , the project include :
 2. Rock, paper and scissor Game
 3. Password Generator
 4. Dice roll simulator
+5. Simple to do list
 
 
 

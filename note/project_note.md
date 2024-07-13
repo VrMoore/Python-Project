@@ -1,0 +1,2 @@
+- Make display functional
+- Done
