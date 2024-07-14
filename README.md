@@ -5,19 +5,24 @@ This repository is made for learning Python programming from scratch. I made the
 This repo features :
 
 1. Guessing Number
-      Player vs Computer. Each side have score count
+   
+   Player vs Computer. Each side have score count
 
 2. Rock, paper and scissor Game
-      Player vs Computer. Each side have score count depending on given input.
+
+   Player vs Computer. Each side have score count depending on given input.
 
 3. Password Generator
-      Generator password automatically. Depend on how long and how many character will generated.
+   
+   Generator password automatically. Depend on how long and how many character will generated.
 
 4. Dice roll simulator
-      Play dice roll and show ASCII art dice by user input.
+   
+   Play dice roll and show ASCII art dice by user input.
 
 5. Simple to do list
-       Simple to do list without UI. Add, Delete, Display, and Exit task. 
+   
+   Simple to do list without UI. Add, Delete, Display, and Exit task. 
 
 
 <b>Note</b>
