@@ -24,6 +24,9 @@ This repo features :
    
    Simple to do list without UI. Add, Delete, Display, and Exit task. 
 
+6. File Downloader
 
+   Simple downloader to download text file or image file. Does not support video format.
+   
 <b>Note</b>
 This project made just for learn. 
