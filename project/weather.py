@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 api_key = os.getenv('API_KEY')
+country = os.getenv('COUNTRY')
 
-response = requests.get(f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Indonesia?unitGroup=metric&key={api_key}&contentType=json")
+response = requests.get(f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{country}?unitGroup=metric&key={api_key}&contentType=json")
 
 if response.status_code == 200 :
 
