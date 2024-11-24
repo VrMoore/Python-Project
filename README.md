@@ -27,6 +27,10 @@ This repo features :
 6. File Downloader
 
    Simple downloader to download text file or image file. Does not support video format.
+
+7. Weather API
+
+   An application that fetched weather daya from visual crossing api
    
 <b>Note</b>
 This project made just for learn. 
