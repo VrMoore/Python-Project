@@ -30,7 +30,7 @@ This repo features :
 
 7. Weather API
 
-   An application that fetched weather daya from visual crossing api
+   An application that fetched weather data from visual crossing api
    
 <b>Note</b>
 This project made just for learn. 
