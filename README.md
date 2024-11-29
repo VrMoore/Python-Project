@@ -31,6 +31,10 @@ This repo features :
 7. Weather API
 
    An application that fetched weather data from visual crossing api
+
+8. News Aggregator
+
+   An application that fetched news from newsapi.org. This one project use caching to store json data.
    
 <b>Note</b>
 This project made just for learn. 
