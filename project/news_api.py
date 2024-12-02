@@ -10,7 +10,7 @@ api_key = getenv('API_KEY')
 parameters = {
     'apiKey' : api_key,
     'country' : 'us',
-    'category' : 'health',
+    'category' : 'science',
     'language' : 'en',
     'sortBy' : 'popularity'
 }
@@ -22,11 +22,26 @@ class newsAggr() :
     
     def __init__(self) :
         self.news_list = []
+        self.cache_news_method = cacheNews()
 
     def get_news(self, news_data : dict) :
         
         articles = news_data.get('articles')
-        
+
+        # Generate key dulu
+        # Lalu panggil cache_load
+        # Jika ada maka buka news.json
+
+        news_key = self.cache_news_method.create_keys(params=parameters, urls=url)
+        cache_news_data = self.cache_news_method.load_cache(news_key)
+
+        if cache_news_data is not None :
+
+            with open('api project/news.json',mode='r') as bar :
+                bar_news = json.load(bar)
+                print('Fetching from local....')
+                print(bar_news['article'])
+                
         for article in articles :
             news_dict = {
                 'source': article.get('source', {}).get('name', ''),
@@ -36,23 +51,24 @@ class newsAggr() :
             }
             self.news_list.append(news_dict)
             self.print_output(news=news_dict)
+            
+        return self.news_list
 
     def fetch_news(self) :
         
         if response.status_code == 200 :
             news_data = response.json()
             self.get_news(news_data)
-            self.write_to_local()
+            self.write_to_local(self.news_list)
+            self.cache_news_method.save_cache(self.news_list)
 
         else :
             return f"{response.status_code}\nTry again laters"
 
-    def write_to_local(self) :
-        
-        object_news = json.dumps(self.news_list, indent=4)
+    def write_to_local(self, news_list : dict) :
 
         with open(file="api project/news.json", mode="w") as file:
-            file.write(object_news)
+            json.dump(news_list, file, indent=4)
 
     def print_output(self, news : dict) :
         
@@ -72,11 +88,22 @@ class cacheNews() :
 
         return self.cache
 
-    def load_cache(self) :
-        pass
+    def save_cache(self, news_article : dict) :
 
-    def save_cache(self) :
-        pass
+        self.create_keys(params=parameters, urls=url)
+        self.cache['article'] = news_article
+
+        with open('api project/news.json', mode='w') as cn :
+            json.dump(self.cache, cn, indent=4)
+
+    def load_cache(self, token : dict) :
+        
+        with open(file='api project/news.json', mode='r') as foo :
+            open_cache = json.load(foo)
+            if token[url] == open_cache[url]:
+                return open_cache['article']
+            else :
+                return False
 
 if __name__  == "__main__" :
     my_news = newsAggr()
@@ -84,4 +111,4 @@ if __name__  == "__main__" :
 
     # my_cache = cacheNews()
     # my_cache.create_keys(params=parameters, urls=url)
-    # my_cache.save_cache()
+    # my_cache.load_cache()
