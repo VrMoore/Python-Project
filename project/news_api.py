@@ -1,5 +1,5 @@
 from requests import get as get_url
-from os import getenv, path
+from os import getenv, path, getcwd
 import hashlib
 import json
 from dotenv import load_dotenv
@@ -22,6 +22,9 @@ parameters = {
 url = "https://newsapi.org/v2/top-headlines"
 response = get_url(url, params=parameters)
 
+# Specify your name path
+MY_CACHE_PATH = f'api project/news.json'
+
 class newsAggr() :
     
     def __init__(self) :
@@ -42,10 +45,12 @@ class newsAggr() :
 
         if cache_news_data is True :
 
-            with open('api project/news.json',mode='r') as bar :
+            with open(file= MY_CACHE_PATH,mode='r') as bar :
                 bar_news = json.load(bar)
                 print('Fetching from local....')
-                print(bar_news['article'])
+                
+                for article in bar_news['article'] :
+                    self.print_output(article)
 
         elif cache_news_data is False :    
 
@@ -72,16 +77,9 @@ class newsAggr() :
         if response.status_code == 200 :
             news_data = response.json()
             self.get_news(news_data)
-            # self.write_to_local(self.news_list)
-            # self.cache_news_method.save_cache(self.news_list)
 
         else :
             return f"{response.status_code}\nTry again laters"
-
-    def write_to_local(self, news_list : dict) :
-
-        with open(file="api project/news.json", mode="w") as file:
-            json.dump(news_list, file, indent=4)
 
     def print_output(self, news : dict) :
         
@@ -112,7 +110,7 @@ class cacheNews() :
         self.create_keys(params=parameters, urls=url)
         self.cache['article'] = news_article
 
-        with open('api project/news.json', mode='w') as cn :
+        with open(file= MY_CACHE_PATH, mode='w') as cn :
             json.dump(self.cache, cn, indent=4)
 
     def load_cache(self, token : dict) -> bool :
@@ -120,7 +118,7 @@ class cacheNews() :
             Check cache file whether the key is present or not , return Boolean
         """
         
-        with open(file='api project/news.json', mode='r') as foo :
+        with open(file= MY_CACHE_PATH, mode='r') as foo :
             open_cache = json.load(foo)
             if token[url] == open_cache[url]:
                 return True
