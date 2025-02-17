@@ -1,40 +1,22 @@
 # Python-Project
 
-This repository is made for learning Python programming from scratch. I made these project from beginner level to more advance level. These project will help _user_ to understand fundamental concepts such as loop, class, function, etc.
+This repository is mainly made for learn Python programming. I made these project from beginner level to more advance level. These project will help _user_ to understand fundamental concepts such as loop, class, function, etc.
 
-This repo features :
-
+## <a id='description'>App
 1. Guessing Number
-   
-   Player vs Computer. Each side have score count
-
 2. Rock, paper and scissor Game
-
-   Player vs Computer. Each side have score count depending on given input.
-
 3. Password Generator
-   
-   Generator password automatically. Depend on how long and how many character will generated.
-
 4. Dice roll simulator
-   
-   Play dice roll and show ASCII art dice by user input.
-
-5. Simple to do list
-   
-   Simple to do list without UI. Add, Delete, Display, and Exit task. 
-
+5. Simple to do list ( with JSON caching)
 6. File Downloader
-
-   Simple downloader to download text file or image file. Does not support video format.
-
 7. Weather API
-
-   An application that fetched weather data from visual crossing api
-
 8. News Aggregator
+9. ......
 
-   An application that fetched news from newsapi.org. This one project use caching to store json data.
-   
-<b>Note</b>
-This project made just for learn. 
+## [App Description](#description)
+
+...
+
+### Note  
+---
+This project mainly made for learn. Not intended for any sort of business.
