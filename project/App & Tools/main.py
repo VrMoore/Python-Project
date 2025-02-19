@@ -1,5 +1,6 @@
 from yt_dlp import YoutubeDL
 import os
+import json
 
 # Change your download path
 MAIN_PATH = os.getcwd()
@@ -15,16 +16,25 @@ class youtubeVideo() :
         self.options = {
             'format' :'best',
             'outtmpl' : '%(title)s.%(ext)s'
+            # 'outtmpl' : os.path.join(f'{MAIN_PATH}/Downloaded','%(title)s.%(ext)s')
         }
 
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
-            # videos = yt.download(urls)
-
-        # self.save(videos)
     
     def downloadAudios(self, urls) :
-        print('Download Audio....')
+        
+        self.options = {
+            'format' : 'best',
+            'extract_audio' : True,
+            'audio_format' : 'mp3',
+            'audio_quality' : '192',
+            'outtmpl' :'%(title)s.%(ext)s'
+            # 'outtmpl' : os.path.join(f'{MAIN_PATH}/Downloaded','%(title)s.%(ext)s')
+        }
+
+        with YoutubeDL(self.options) as yt :
+            yt.download(urls)
     
     def downloadSubtitle(self, urls) :
         self.options = {
@@ -32,18 +42,12 @@ class youtubeVideo() :
             'format' :'best',
             'subtitleslangs' : ['en'],
             'skip_download' : True,
-            'quiet' : True
+            'quiet' : True,
+            'substitlesformat' : 'srt'
         }
 
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
-
-    # def save(self, videos) :
-        
-    #     if not os.path.exists(f"{MAIN_PATH}/MyDownload") :
-    #         download_path = os.makedirs('MyDownload')
-
-    #     os.rename(MAIN_PATH, f"{MAIN_PATH}/Downloads")
     
 
 class showInfo() :
@@ -59,8 +63,11 @@ class showInfo() :
         with YoutubeDL(self.options) as yt :
             data = yt.extract_info(url=urls, download=False)
 
-        print('Title', data.get('title'))
-        print('Descrition', data.get('description'))
+        with open(f"{MAIN_PATH}/metdata.json", mode='w') as file :
+            json.dump(data, file, indent=4)
+
+        print('Title : ', data.get('title'))
+        print('Description : ', data.get('description'))
 
 
 class handler() :
@@ -74,7 +81,8 @@ class handler() :
             1. Download Youtube Video
             2. Download Youtube Audio
             3. Show Info
-            4. Manage file (coming soon...)
+            4. Write Substitle
+            5. Manage file (coming soon...)
             
             X. Exit 
         """)
@@ -128,3 +136,5 @@ class welcome() :
 
 if __name__ == "__main__" :
     welcome()
+
+# https://www.youtube.com/watch?v=WIyTZDHuarQ&t=15ss
