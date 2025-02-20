@@ -21,9 +21,9 @@ This repository is mainly made for learn Python programming. I made these projec
 3. Guessing Number
 
 
-## App Description
+## <a id='apps'>App Description
 
-### <a id='apps'>API
+### <a id='api'>API
 This folder will teach you how to use API in your program. From simple as weather api to news aggregator.
 
 1. <b><a id='weather_api'>Weather API</b>
