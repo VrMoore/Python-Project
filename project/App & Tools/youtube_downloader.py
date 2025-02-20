@@ -62,10 +62,40 @@ class showInfo() :
     def getMetaData(self, urls) :
         with YoutubeDL(self.options) as yt :
             data = yt.extract_info(url=urls, download=False)
+            self.printMetaData(data=data)
 
-        with open(f"{MAIN_PATH}/metdata.json", mode='w') as file :
-            json.dump(data, file, indent=4)
+        os.makedirs(f"{MAIN_PATH}/cache", exist_ok=True)
 
+        if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
+            with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
+                youtube_cache = []
+                json.dump(youtube_cache, file, indent=4)
+
+        else :   
+
+            with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
+                youtube_video = {
+                    'id' : data.get('id'),
+                    'channel' : data.get('channel'),
+                    'channel_url' : data.get('uploader_url'),
+                    'video' : [
+                        {
+                            'video_title' : data.get('title'),
+                            'video_description' : data.get('description'),
+                            'video_language' : data.get('language'),
+                            'video_url' : data.get('original_url')
+                        }
+                    ]
+                }
+
+                json.dump(youtube_video, file, indent=4)
+
+    def saveCache(self) :
+        pass
+
+    def printMetaData(self, data) : 
+        print('ID : ', data.get('id') )
+        print('Channel : ', data.get('channel'))
         print('Title : ', data.get('title'))
         print('Description : ', data.get('description'))
 
@@ -137,4 +167,5 @@ class welcome() :
 if __name__ == "__main__" :
     welcome()
 
-# https://www.youtube.com/watch?v=WIyTZDHuarQ&t=15ss
+# https://www.youtube.com/watch?v=WIyTZDHuarQ&t=15ss (Veritasium)
+# https://youtube.com/watch?v=Z_xJ40QXu7Q&t=46s (XKCD What's if)
