@@ -11,7 +11,7 @@ class youtubeVideo() :
     def __init__(self) :
         pass
 
-    def downloadVideos(self, urls) :
+    def downloadVideos(self, urls : str) :
 
         self.options = {
             'format' :'best',
@@ -22,7 +22,7 @@ class youtubeVideo() :
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
     
-    def downloadAudios(self, urls) :
+    def downloadAudios(self, urls : str) :
         
         self.options = {
             'format' : 'best',
@@ -36,7 +36,7 @@ class youtubeVideo() :
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
     
-    def downloadSubtitle(self, urls) :
+    def downloadSubtitle(self, urls : str) :
         self.options = {
             'writesubtitles' : True,
             'format' :'best',
@@ -59,45 +59,54 @@ class showInfo() :
             'Force_generic_extractor' : True
         }
 
-    def getMetaData(self, urls) :
+    def getMetaData(self, urls : str) :
         with YoutubeDL(self.options) as yt :
             data = yt.extract_info(url=urls, download=False)
             self.printMetaData(data=data)
 
         os.makedirs(f"{MAIN_PATH}/cache", exist_ok=True)
 
+        youtube_video = {
+                'id' : data.get('id'),
+                'channel' : data.get('channel'),
+                'channel_url' : data.get('uploader_url'),
+                'video' : [
+                    {
+                        'video_title' : data.get('fulltitle'),
+                        'video_description' : data.get('description'),
+                        'video_language' : data.get('language'),
+                        'video_url' : data.get('original_url')
+                    }
+                ]
+        }
+
+        # if there is a file but empty
         if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
             with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
                 youtube_cache = []
+                youtube_cache.append(youtube_video)
                 json.dump(youtube_cache, file, indent=4)
 
+        # if there is file but have data
         else :   
 
-            with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
-                youtube_video = {
-                    'id' : data.get('id'),
-                    'channel' : data.get('channel'),
-                    'channel_url' : data.get('uploader_url'),
-                    'video' : [
-                        {
-                            'video_title' : data.get('title'),
-                            'video_description' : data.get('description'),
-                            'video_language' : data.get('language'),
-                            'video_url' : data.get('original_url')
-                        }
-                    ]
-                }
+            with open(f"{MAIN_PATH}/cache/dump.json", mode='r') as file :
+                cache_data = json.load(file)
+                cache_data.append(youtube_video)
 
-                json.dump(youtube_video, file, indent=4)
+                self.saveCache(youtube_cache_data=cache_data)
+            
 
-    def saveCache(self) :
-        pass
+    def saveCache(self, youtube_cache_data : dict) :
 
-    def printMetaData(self, data) : 
-        print('ID : ', data.get('id') )
-        print('Channel : ', data.get('channel'))
-        print('Title : ', data.get('title'))
-        print('Description : ', data.get('description'))
+        with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
+            json.dump(youtube_cache_data, file, indent=4)
+
+    def printMetaData(self, data : dict) : 
+        print(f'ID : {data.get("id")}' )
+        print(f'Channel : {data.get("channel")}\n')
+        print(f'Title : {data.get("fulltitle")}')
+        print(f'Description : {data.get("description")}')
 
 
 class handler() :
@@ -106,6 +115,10 @@ class handler() :
         pass
 
     def commandMessage(self) :
+        """
+            List of all possible action user can do.
+        """
+
         print(f"""
             Select actions :
             1. Download Youtube Video
@@ -117,8 +130,8 @@ class handler() :
             X. Exit 
         """)
 
-        user_choice = input("I choose : ")
-        user_urls = input('Urls : ')
+        user_choice : str = input("I choose : ")
+        user_urls : str = input('Urls : ')
         myYoutube = youtubeVideo()
         myInfo = showInfo()
 
@@ -139,6 +152,9 @@ class handler() :
 class welcome() :
 
     def __init__(self) :
+        """
+            Show greeting to user, user have to answer Y/N in question to proceed the program.
+        """
 
         print(f"""
         Hi ! Welcome to MYoutube Downloader :)
@@ -147,11 +163,15 @@ class welcome() :
         From downloading video , audio even managing them.
         """)
 
-        ask_user = input('(y/n) : ')
+        ask_user : str = input('(y/n) : ')
         self.userInput(ask_user)
         
-    
-    def userInput(self, user_answer) :
+    def userInput(self, user_answer : str) :
+        """
+            Take an arguments from ask_user in which user answer will be used to determine what it will do.
+            if user input n , exit the program,
+            if user input y, run commandMessage()
+        """
 
         if user_answer.lower() == 'n' :
             print('Good Bye ..... :)')
