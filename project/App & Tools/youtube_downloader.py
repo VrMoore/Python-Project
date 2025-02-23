@@ -9,18 +9,21 @@ print(MAIN_PATH)
 class youtubeVideo() :
     
     def __init__(self) :
-        pass
+        self.metadata_youtube = showInfo()
+        self.file_path = (f"{MAIN_PATH}/downloaded")
+
+    os.makedirs(f"{MAIN_PATH}/downloaded", exist_ok=True)
 
     def downloadVideos(self, urls : str) :
 
         self.options = {
             'format' :'best',
-            'outtmpl' : '%(title)s.%(ext)s'
-            # 'outtmpl' : os.path.join(f'{MAIN_PATH}/Downloaded','%(title)s.%(ext)s')
+            'outtmpl' : os.path.join(f"{self.file_path}",'%(title)s.%(ext)s')
         }
 
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
+            self.metadata_youtube.getMetaData(urls=urls)
     
     def downloadAudios(self, urls : str) :
         
@@ -29,12 +32,13 @@ class youtubeVideo() :
             'extract_audio' : True,
             'audio_format' : 'mp3',
             'audio_quality' : '192',
-            'outtmpl' :'%(title)s.%(ext)s'
-            # 'outtmpl' : os.path.join(f'{MAIN_PATH}/Downloaded','%(title)s.%(ext)s')
+            'outtmpl' : os.path.join(f"{self.file_path}",'%(title)s.%(ext)s')
         }
 
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
+            self.metadata_youtube.getMetaData(urls=urls)
+
     
     def downloadSubtitle(self, urls : str) :
         self.options = {
@@ -43,12 +47,13 @@ class youtubeVideo() :
             'subtitleslangs' : ['en'],
             'skip_download' : True,
             'quiet' : True,
-            'substitlesformat' : 'srt'
+            'substitlesformat' : 'srt',
+            'outtmpl' : os.path.join(f"{self.file_path}", '%(title)s.%(ext)s')
         }
 
         with YoutubeDL(self.options) as yt :
             yt.download(urls)
-    
+            self.metadata_youtube.getMetaData(urls=urls)
 
 class showInfo() :
     
@@ -64,8 +69,10 @@ class showInfo() :
             data = yt.extract_info(url=urls, download=False)
             self.printMetaData(data=data)
 
+        # Immediately create cache folder if does not exist
         os.makedirs(f"{MAIN_PATH}/cache", exist_ok=True)
 
+        # youtube_video : dict, only store some of data from metadata
         youtube_video = {
                 'id' : data.get('id'),
                 'channel' : data.get('channel'),
@@ -80,43 +87,94 @@ class showInfo() :
                 ]
         }
 
-        # if there is a file but empty
+        # Check whether if the file is exist or not, if it's not : immediately made dump.json with empty list in it.
+        if not os.path.exists(f"{MAIN_PATH}/cache/dump.json") :
+            with open(f'{MAIN_PATH}/cache/dump.json' , mode='w') as file :
+                youtube_cache = []
+                json.dump(youtube_cache, file)
+
+        # if there is a file but empty, immediately make empty list and append metadata
         if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
             with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
                 youtube_cache = []
                 youtube_cache.append(youtube_video)
                 json.dump(youtube_cache, file, indent=4)
 
-        # if there is file but have data
+        # if there is file but have data, load the file first and append it after. Overwrite existing one with a new one.
         else :   
 
             with open(f"{MAIN_PATH}/cache/dump.json", mode='r') as file :
                 cache_data = json.load(file)
                 cache_data.append(youtube_video)
 
-                self.saveCache(youtube_cache_data=cache_data)
+
+                save_youtube_cache = myCache()
+                save_youtube_cache.saveCache(youtube_cache_data=cache_data)
             
+    def printMetaData(self, data : dict) : 
+        """
+            Take an argument from metadata, and print it on the terminal.
+            Print (id, channel, fulltitle, description). You may modify print statement as well as youtube_video (video's metadata).
+        """
+        print("=" * 40)
+        print(f'\nID : {data.get("id")}' )
+        print(f'Channel : {data.get("channel")}\n')
+        print(f'Title : \n{data.get("fulltitle")}\n')
+        print(f'Description : \n{data.get("description")}')
+        print("=" * 40)
+
+class myCache() :
+
+    def __init__(self) :
+        self.CACHE_PATH = f"{MAIN_PATH}/cache/dump.json"
 
     def saveCache(self, youtube_cache_data : dict) :
+        """
+            save metadata into json.
+        """
 
-        with open(f"{MAIN_PATH}/cache/dump.json", mode='w') as file :
+        with open(self.CACHE_PATH, mode='w') as file :
             json.dump(youtube_cache_data, file, indent=4)
 
-    def printMetaData(self, data : dict) : 
-        print(f'ID : {data.get("id")}' )
-        print(f'Channel : {data.get("channel")}\n')
-        print(f'Title : {data.get("fulltitle")}')
-        print(f'Description : {data.get("description")}')
+    def lookCache(self, videos_id : str)  :
+        """
+            look an id from youtube_video (video's metadata) to search it in existing json data.
+        """
+        
+        with open(self.CACHE_PATH, mode='r') as file :
+            youtube_cache = json.load(file)
 
+        list_video : list = [x for x in youtube_cache if x['id'] == videos_id]
+        dict_video : dict = list_video[0]
+
+        # Handles if given id exist in cache data. return boolean
+        if videos_id == dict_video.get('id') :
+            return dict_video
+        else :
+            print(f'There is no {videos_id} found')
+            return None
+        
+
+    def deleteCache(self, videos_id : str) :
+        """
+            delete json cache from given id.
+        """
+
+        if state is True :
+            with open(self.CACHE_PATH, mode='r') as file :
+                youtube_cache = json.load(file)
 
 class handler() :
+    """
+        Handle all user interactions.
+    """
     
     def __init__(self) :
         pass
 
     def commandMessage(self) :
         """
-            List of all possible action user can do.
+            List of all possible action user can do. From downloading youtube video, youtube audio, get metadata, write substitle, to managing files.
         """
 
         print(f"""
@@ -185,7 +243,12 @@ class welcome() :
 
 
 if __name__ == "__main__" :
-    welcome()
+    # welcome()
+    tes = myCache()
+    tes.lookCache("Qewt66Yu7jE")
 
+
+# Youtube Links for testing purpose
 # https://www.youtube.com/watch?v=WIyTZDHuarQ&t=15ss (Veritasium)
 # https://youtube.com/watch?v=Z_xJ40QXu7Q&t=46s (XKCD What's if)
+# https://www.youtube.com/watch?v=Qewt66Yu7jE (One Minute Earth)
