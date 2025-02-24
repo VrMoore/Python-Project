@@ -109,7 +109,7 @@ class showInfo() :
 
 
                 save_youtube_cache = myCache()
-                save_youtube_cache.saveCache(youtube_cache_data=cache_data)
+                save_youtube_cache.saveCache(youtube_cache_data=cache_data, cache_video=youtube_video)
             
     def printMetaData(self, data : dict) : 
         """
@@ -128,11 +128,13 @@ class myCache() :
     def __init__(self) :
         self.CACHE_PATH = f"{MAIN_PATH}/cache/dump.json"
 
-    def saveCache(self, youtube_cache_data : dict) :
+    def saveCache(self, youtube_cache_data : list, cache_video : dict) :
         """
             save metadata into json.
         """
-        existing_data = self.lookCache()
+
+        cache_video_id = cache_video.get('id')
+        existing_data = self.lookCache(cache_video)
 
         if existing_data is False :
             with open(self.CACHE_PATH, mode='w') as file :
@@ -152,10 +154,12 @@ class myCache() :
             youtube_cache = json.load(file)
 
         list_video : list = [x for x in youtube_cache if x['id'] == videos_id]
-        dict_video : dict = list_video[0]
+        dict_video : dict = list_video
+        print('-----------------',dict_video,'--------------')
 
         # Handles if given id exist in cache data. return boolean
-        if videos_id == dict_video.get('id') :
+        if videos_id == dict_video :
+            print('Found it!!')
             return True
         else :
             print(f'There is no {videos_id} found')
