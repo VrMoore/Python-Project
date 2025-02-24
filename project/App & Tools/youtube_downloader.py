@@ -132,15 +132,22 @@ class myCache() :
         """
             save metadata into json.
         """
+        existing_data = self.lookCache()
 
-        with open(self.CACHE_PATH, mode='w') as file :
-            json.dump(youtube_cache_data, file, indent=4)
+        if existing_data is False :
+            with open(self.CACHE_PATH, mode='w') as file :
+                json.dump(youtube_cache_data, file, indent=4)
+
+        return None
 
     def lookCache(self, videos_id : str)  :
         """
             look an id from youtube_video (video's metadata) to search it in existing json data.
         """
         
+        if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
+            return print('No data shown')
+
         with open(self.CACHE_PATH, mode='r') as file :
             youtube_cache = json.load(file)
 
@@ -149,10 +156,10 @@ class myCache() :
 
         # Handles if given id exist in cache data. return boolean
         if videos_id == dict_video.get('id') :
-            return dict_video
+            return True
         else :
             print(f'There is no {videos_id} found')
-            return None
+            return False
         
 
     def deleteCache(self, videos_id : str) :
@@ -160,9 +167,7 @@ class myCache() :
             delete json cache from given id.
         """
 
-        if state is True :
-            with open(self.CACHE_PATH, mode='r') as file :
-                youtube_cache = json.load(file)
+        
 
 class handler() :
     """
@@ -243,9 +248,9 @@ class welcome() :
 
 
 if __name__ == "__main__" :
-    # welcome()
-    tes = myCache()
-    tes.lookCache("Qewt66Yu7jE")
+    welcome()
+    # tes = myCache()
+    # tes.lookCache("Qewt66Yu7jE")
 
 
 # Youtube Links for testing purpose
