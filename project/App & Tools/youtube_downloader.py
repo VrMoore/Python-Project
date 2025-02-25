@@ -128,22 +128,45 @@ class myCache() :
     def __init__(self) :
         self.CACHE_PATH = f"{MAIN_PATH}/cache/dump.json"
 
-    def saveCache(self, youtube_cache_data : list, cache_video : dict) :
+
+    def welcome(self) :
+        print(f"""
+            1. Display Cache
+            2. Look Spesific Cache
+            3. Delete Cache
+
+            X. Quit
+        """)
+
+        ask_user : str = input('Do : ')
+
+        if ask_user == '1' :
+            self.displayCache()
+        elif ask_user == '2' :
+            self.lookCache()
+        elif ask_user == '3' :
+            self.deleteCache()
+        elif ask_user.lower() == 'x' :
+            exit()
+        else :
+            print('Invaid Input')
+
+    def saveCache(self, youtube_cache_data : list , cache_video : dict) :
         """
             save metadata into json.
         """
 
         cache_video_id = cache_video.get('id')
         existing_data = self.lookCache(videos_id=cache_video_id)
-        print(existing_data, '---------------------')
 
-        if existing_data is False :
+        if existing_data == False :
             with open(self.CACHE_PATH, mode='w') as file :
                 json.dump(youtube_cache_data, file, indent=4)
             
             print('Append new data')
 
-        return print(f"There is already data")
+        else : 
+            return print(f"There is already {cache_video_id} in cache")
 
     def lookCache(self, videos_id : str)  :
         """
@@ -157,22 +180,41 @@ class myCache() :
             youtube_cache = json.load(file)
 
         list_video : list = [x for x in youtube_cache if x['id'] == videos_id]
+
+        if len(list_video) == 0 :
+            print(f'There is no {videos_id} found -------')
+            return False
+            
         dict_video : dict = list_video[0]
 
         if videos_id == dict_video.get('id') :
-            print('Found it!!')
+            print(f'``````Found {videos_id} on cache.``````')
             return True
-        else :
-            print(f'There is no {videos_id} found -------')
-            return False
         
 
-    def deleteCache(self, videos_id : str) :
+    def deleteCache(self, videos_id_del : str) :
         """
             delete json cache from given id.
         """
 
-        pass
+        look_cache_data = self.lookCache(videos_id=videos_id_del)
+
+        if look_cache_data == False :
+            return print(f"There is no {videos_id_del} available in cache data.\nUnable to delete.")
+
+        with open(self.CACHE_PATH, mode='r') as file :
+            youtube_cache_del = json.load(file)
+
+        len_youtube_cache = len(youtube_cache_del)
+
+        for cache in range(len_youtube_cache) :
+            if youtube_cache_del[cache]['id'] == videos_id_del :
+                del youtube_cache_del[cache]
+
+        with open(self.CACHE_PATH, mode='w') as file :
+            json.dump(youtube_cache_del, file, indent=4)
+
+        return print(f"{videos_id_del} cache have been deleted.")
         
 
 class handler() :
@@ -192,9 +234,9 @@ class handler() :
             Select actions :
             1. Download Youtube Video
             2. Download Youtube Audio
-            3. Show Info
-            4. Write Substitle
-            5. Manage file (coming soon...)
+            4. Download Youtube Substitle
+            3. Show Video Info
+            5. Manage file (only cache data)
             
             X. Exit 
         """)
@@ -203,6 +245,7 @@ class handler() :
         user_urls : str = input('Urls : ')
         myYoutube = youtubeVideo()
         myInfo = showInfo()
+        myCache = myCache()
 
         if user_choice.lower() == 'x' :
             exit()
@@ -212,9 +255,11 @@ class handler() :
         elif user_choice.lower() == '2' :
             myYoutube.downloadAudios(user_urls)
         elif user_choice.lower() == '3' :
-            myInfo.getMetaData(user_urls)
-        elif user_choice.lower() == '4' :
             myYoutube.downloadSubtitle(user_urls)
+        elif user_choice.lower() == '4' :
+            myInfo.getMetaData(user_urls)
+        elif user_choice.lower() == '5' :
+            myCache.welcome()
         else :
             print('Invalid Input')
 
@@ -254,9 +299,9 @@ class welcome() :
 
 
 if __name__ == "__main__" :
-    welcome()
-    # tes = myCache()
-    # tes.lookCache("Qewt66Yu7jE")
+    # welcome()
+    tes = myCache()
+    tes.deleteCache("KdoaiGTIBY4")
 
 
 # Youtube Links for testing purpose
