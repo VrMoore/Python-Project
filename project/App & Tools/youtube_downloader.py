@@ -134,13 +134,16 @@ class myCache() :
         """
 
         cache_video_id = cache_video.get('id')
-        existing_data = self.lookCache(cache_video)
+        existing_data = self.lookCache(videos_id=cache_video_id)
+        print(existing_data, '---------------------')
 
         if existing_data is False :
             with open(self.CACHE_PATH, mode='w') as file :
                 json.dump(youtube_cache_data, file, indent=4)
+            
+            print('Append new data')
 
-        return None
+        return print(f"There is already data")
 
     def lookCache(self, videos_id : str)  :
         """
@@ -154,15 +157,13 @@ class myCache() :
             youtube_cache = json.load(file)
 
         list_video : list = [x for x in youtube_cache if x['id'] == videos_id]
-        dict_video : dict = list_video
-        print('-----------------',dict_video,'--------------')
+        dict_video : dict = list_video[0]
 
-        # Handles if given id exist in cache data. return boolean
-        if videos_id == dict_video :
+        if videos_id == dict_video.get('id') :
             print('Found it!!')
             return True
         else :
-            print(f'There is no {videos_id} found')
+            print(f'There is no {videos_id} found -------')
             return False
         
 
@@ -171,6 +172,7 @@ class myCache() :
             delete json cache from given id.
         """
 
+        pass
         
 
 class handler() :
@@ -261,3 +263,4 @@ if __name__ == "__main__" :
 # https://www.youtube.com/watch?v=WIyTZDHuarQ&t=15ss (Veritasium)
 # https://youtube.com/watch?v=Z_xJ40QXu7Q&t=46s (XKCD What's if)
 # https://www.youtube.com/watch?v=Qewt66Yu7jE (One Minute Earth)
+# https://www.youtube.com/watch?v=KdoaiGTIBY4 (Mults)
