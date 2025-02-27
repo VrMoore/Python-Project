@@ -128,29 +128,6 @@ class myCache() :
     def __init__(self) :
         self.CACHE_PATH = f"{MAIN_PATH}/cache/dump.json"
 
-
-    def welcome(self) :
-        print(f"""
-            1. Display Cache
-            2. Look Spesific Cache
-            3. Delete Cache
-
-            X. Quit
-        """)
-
-        ask_user : str = input('Do : ')
-
-        if ask_user == '1' :
-            self.displayCache()
-        elif ask_user == '2' :
-            self.lookCache()
-        elif ask_user == '3' :
-            self.deleteCache()
-        elif ask_user.lower() == 'x' :
-            exit()
-        else :
-            print('Invaid Input')
-
     def saveCache(self, youtube_cache_data : list , cache_video : dict) :
         """
             save metadata into json.
@@ -215,7 +192,56 @@ class myCache() :
             json.dump(youtube_cache_del, file, indent=4)
 
         return print(f"{videos_id_del} cache have been deleted.")
-        
+
+    def displayCache(self) :
+
+        if os.path.getsize(f"{self.CACHE_PATH}") == 0 :
+            return print(f"No cache data")
+
+        with open(self.CACHE_PATH, mode='r') as file :
+            cache_data = json.load(file)
+
+
+        for item in cache_data :
+            video_id = item['id']
+            video_channel = item['channel']
+            video_details = item['video'][0]
+            video_title = video_details['video_title']
+            video_url = video_details['video_url']
+
+            print("="*30)
+            print(f"ID      :       {video_id}")
+            print(f"Channel :       {video_channel}")
+            print(f"Title   :       {video_title}")
+            print(f"URL     :       {video_url}")
+            print("="*30, '\n')
+
+class manageFile() :
+
+    def __init__(self) :
+        print(f"""
+            1. Display Cache
+            2. Look Spesific Cache
+            3. Delete Cache
+
+            X. Quit
+        """)
+
+    def userAction(self) :
+        my_cache = myCache()
+        ask_user : str = input('Do : ')
+
+        if ask_user == '1' :
+            my_cache.displayCache()
+        elif ask_user == '2' :
+            my_cache.lookCache()
+        elif ask_user == '3' :
+            my_cache.deleteCache
+        elif ask_user.lower() == 'x' :
+            exit()
+        else :
+            print('Invaid Input')
+
 
 class handler() :
     """
@@ -242,24 +268,27 @@ class handler() :
         """)
 
         user_choice : str = input("I choose : ")
-        user_urls : str = input('Urls : ')
         myYoutube = youtubeVideo()
         myInfo = showInfo()
-        myCache = myCache()
+        myFile = manageFile()
 
         if user_choice.lower() == 'x' :
             exit()
         
         if user_choice.lower() == '1' :
+            user_urls : str = input('Urls : ')
             myYoutube.downloadVideos(user_urls)
         elif user_choice.lower() == '2' :
+            user_urls : str = input('Urls : ')
             myYoutube.downloadAudios(user_urls)
         elif user_choice.lower() == '3' :
+            user_urls : str = input('Urls : ')
             myYoutube.downloadSubtitle(user_urls)
         elif user_choice.lower() == '4' :
+            user_urls : str = input('Urls : ')
             myInfo.getMetaData(user_urls)
         elif user_choice.lower() == '5' :
-            myCache.welcome()
+            myFile.userAction()
         else :
             print('Invalid Input')
 
@@ -299,9 +328,9 @@ class welcome() :
 
 
 if __name__ == "__main__" :
-    # welcome()
-    tes = myCache()
-    tes.deleteCache("KdoaiGTIBY4")
+    welcome()
+    # tes = myCache()
+    # tes.deleteCache("KdoaiGTIBY4")
 
 
 # Youtube Links for testing purpose
