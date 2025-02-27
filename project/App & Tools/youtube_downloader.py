@@ -128,6 +128,16 @@ class myCache() :
     def __init__(self) :
         self.CACHE_PATH = f"{MAIN_PATH}/cache/dump.json"
 
+    def doExist(self) -> bool : 
+        """
+            Check whether dump.json containt data or not. Return boolean.
+        """
+
+        if os.path.getsize(self.CACHE_PATH) != 0 :
+            return True
+
+        return False
+
     def saveCache(self, youtube_cache_data : list , cache_video : dict) :
         """
             save metadata into json.
@@ -145,13 +155,14 @@ class myCache() :
         else : 
             return print(f"There is already {cache_video_id} in cache")
 
-    def lookCache(self, videos_id : str)  :
+    def lookCache(self, videos_id : str) -> bool :
         """
             look an id from youtube_video (video's metadata) to search it in existing json data.
         """
         
         if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
-            return print('No data shown')
+            print('No data shown')
+            exit()
 
         with open(self.CACHE_PATH, mode='r') as file :
             youtube_cache = json.load(file)
@@ -193,29 +204,6 @@ class myCache() :
 
         return print(f"{videos_id_del} cache have been deleted.")
 
-    def displayCache(self) :
-
-        if os.path.getsize(f"{self.CACHE_PATH}") == 0 :
-            return print(f"No cache data")
-
-        with open(self.CACHE_PATH, mode='r') as file :
-            cache_data = json.load(file)
-
-
-        for item in cache_data :
-            video_id = item['id']
-            video_channel = item['channel']
-            video_details = item['video'][0]
-            video_title = video_details['video_title']
-            video_url = video_details['video_url']
-
-            print("="*30)
-            print(f"ID      :       {video_id}")
-            print(f"Channel :       {video_channel}")
-            print(f"Title   :       {video_title}")
-            print(f"URL     :       {video_url}")
-            print("="*30, '\n')
-
     def lookId(self, videos_id : str) :
         """
             Look for spesific videos id and print to the terminal
@@ -232,27 +220,50 @@ class myCache() :
             print(f'There is no {videos_id} found -------')
             return False
             
-        dict_video : dict = list_video[0]
+        dict_video : dict = next(item for item in list_video if isinstance(item, dict))
 
         if videos_id == dict_video.get('id') :
-            for item in list_video :
-                video_id = item['id']
-                video_channel = item['channel']
-                video_details = item['video'][0]
-                video_title = video_details['video_title']
-                video_url = video_details['video_url']
-                video_lang = video_details['video_language']
-                video_desc = video_details['video_description']
+            display_single_cache = self.displaySpesific(cache=dict_video)
 
-                print("="*30)
-                print(f"ID      :       {video_id}")
-                print(f"Channel :       {video_channel}")
-                print(f"Title   :       {video_title}")
-                print(f"URL     :       {video_url}")
-                print(f"Language :      {video_lang}")
-                print(f"Description : ")
-                print(f"{video_desc}")
-                print("="*30, '\n')
+    def displayCache(self) :
+        
+        do_ext = self.doExist()
+        if self.doExist() == False :
+            return print(f"There is no cache")
+
+        with open(self.CACHE_PATH, mode='r') as file :
+            cache_data = json.load(file)
+
+        for item in cache_data :
+            video_id = item['id']
+            video_channel = item['channel']
+            video_details = item['video'][0]
+            video_title = video_details['video_title']
+            video_url = video_details['video_url']
+
+            print("="*30)
+            print(f"ID      :       {video_id}")
+            print(f"Channel :       {video_channel}")
+            print(f"Title   :       {video_title}")
+            print(f"URL     :       {video_url}")
+            print("="*30, '\n')
+
+    def displaySpesific(self, cache : dict = {}) :
+        do_ext = self.doExist()
+        if self.doExist() == False :
+            return print(f"There is no cache")
+        
+        if len(cache) != 0 :
+           
+            print('\n')
+            for key, value in cache.items() :
+                if key == 'video' :
+                    print(key)
+                else :
+                    print(value)
+
+        else :
+            return print(f"There is no such data in cache.")
 
 class manageFile() :
 
