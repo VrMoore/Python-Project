@@ -216,6 +216,44 @@ class myCache() :
             print(f"URL     :       {video_url}")
             print("="*30, '\n')
 
+    def lookId(self, videos_id : str) :
+        """
+            Look for spesific videos id and print to the terminal
+        """
+        if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
+            return print('No data shown')
+
+        with open(self.CACHE_PATH, mode='r') as file :
+            youtube_cache = json.load(file)
+
+        list_video : list = [x for x in youtube_cache if x['id'] == videos_id]
+
+        if len(list_video) == 0 :
+            print(f'There is no {videos_id} found -------')
+            return False
+            
+        dict_video : dict = list_video[0]
+
+        if videos_id == dict_video.get('id') :
+            for item in list_video :
+                video_id = item['id']
+                video_channel = item['channel']
+                video_details = item['video'][0]
+                video_title = video_details['video_title']
+                video_url = video_details['video_url']
+                video_lang = video_details['video_language']
+                video_desc = video_details['video_description']
+
+                print("="*30)
+                print(f"ID      :       {video_id}")
+                print(f"Channel :       {video_channel}")
+                print(f"Title   :       {video_title}")
+                print(f"URL     :       {video_url}")
+                print(f"Language :      {video_lang}")
+                print(f"Description : ")
+                print(f"{video_desc}")
+                print("="*30, '\n')
+
 class manageFile() :
 
     def __init__(self) :
@@ -234,9 +272,11 @@ class manageFile() :
         if ask_user == '1' :
             my_cache.displayCache()
         elif ask_user == '2' :
-            my_cache.lookCache()
+            user_video_id = input("Video ID : ")
+            my_cache.lookId(videos_id=user_video_id)
         elif ask_user == '3' :
-            my_cache.deleteCache
+            user_video_del = input("Video ID : ")
+            my_cache.deleteCache(videos_id_del=user_video_del)
         elif ask_user.lower() == 'x' :
             exit()
         else :
