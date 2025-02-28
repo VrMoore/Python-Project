@@ -159,8 +159,8 @@ class myCache() :
         """
             look an id from youtube_video (video's metadata) to search it in existing json data.
         """
-        
-        if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
+        do_ext = self.doExist()
+        if self.doExist() == False :
             print('No data shown')
             exit()
 
@@ -208,7 +208,8 @@ class myCache() :
         """
             Look for spesific videos id and print to the terminal
         """
-        if os.path.getsize(f"{MAIN_PATH}/cache/dump.json") == 0 :
+        do_ext = self.doExist()
+        if self.doExist() == False :
             return print('No data shown')
 
         with open(self.CACHE_PATH, mode='r') as file :
@@ -258,7 +259,19 @@ class myCache() :
             print('\n')
             for key, value in cache.items() :
                 if key == 'video' :
-                    print(key)
+                    videos_details = value[0]
+                    videos_title = videos_details.get('video_title')
+                    videos_language = videos_details.get('video_language')
+                    videos_url = videos_details.get('video_url')
+                    videos_description = videos_details.get('video_description')
+                    
+                    print("="*40)
+                    print(f"Title           :   {videos_title}")
+                    print(f"Language        :   {videos_language}")
+                    print(f"URL             :   {videos_url}")
+                    print(f"Description     :   \n{videos_description}")
+                    print("="*40)
+                        
                 else :
                     print(value)
 
