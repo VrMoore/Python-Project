@@ -1,3 +1,4 @@
+
 # Python-Project
 
 This repository is mainly made for learn Python programming. I made these project from beginner level to more advance level. These project will help _user_ to understand fundamental concepts such as loop, class, function, etc.
@@ -60,23 +61,33 @@ This folder will teach you how to use API in your program. From simple as weathe
 This folders contains applications & tools that made using vanilla python. Such as : file downloader, to do list, youtube downloader, etc.
 
 1. <b><a id='file_downloader'>File downloader</b>
-	File downloader use urllib python library to make a request. Only work with a link that have extension of the file in the url. E.g
+	File downloader use urllib python library to make a request. Only work with a link that have extension of the file in the url. E.g :
 
 	``https://ironerozanie.wordpress.com/wp-content/uploads/2013/03/soal-dan-pembahasan-un-matematika-smp-2012.pdf``
 
 2. <b><a id='password_generator'>Password Generator </b>
 	Generate password randomly based off parameters using random module. You may not use this program to make password for your email account, game account, etc, it might be unsafe thus the code is crackable and unsafe.
 
-3. <b><a id='to-do_list'>Simple to do list)</b>
+3. <b><a id='to-do_list'>Simple to do list</b>
 	Simple to-do list app in your terminal. Your task only accessible in that one instance, hence there is no JSON caching implemented. 
 
 4. <b><a id='web_scrapper'> Web scrapper</b>
 	This project is abandoned. <b>This code is break, you may not use it in your code editor<b>
 	
 5. <b><a id='youtube_downloader'>Youtube Downloader</b>
-	Simple apps that allow you to download video, audio, substitle and show metadata info in your terminal.
+	Simple apps that allow you to download video, audio, substitle and show metadata info in your terminal. Make sure you install [yt-dlp](https://github.com/yt-dlp/yt-dlp) using PIP and ffmpeg (for audio) in order to run the script.
 
-	>This project is still under develop. The code , reference and files may change during development
+	You may customize self.options in youtubeVideo() class based on your preferred choices.
+	```
+		# Check the documentation for clear instruction
+		
+		self.options = {
+            'format' :'best',
+            'quiet' : True,
+            'outtmpl' : os.path.join(self.file_path, '%(title)s.%(ext)s')
+        }
+	```
+
 
 ### <a id='games'>Games
 This folder contain silly games that can be played in your terminal or GUI. Contructed using vanilla python.
