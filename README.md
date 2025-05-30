@@ -15,6 +15,7 @@ This repository is mainly made for learn Python programming. I made these projec
 3. [Simple to do list](#to-do_list) 
 4. [Webscrapper](#webscrapper)
 5. [Youtube Downloader](#youtube_downloader)
+6. JSON Cache Storage
 
 ### [Games](#games)
 1. Dice roll simulator
