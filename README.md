@@ -1,4 +1,5 @@
 
+
 # Python-Project
 
 This repository is mainly made for learn Python programming. I made these project from beginner level to more advance level. These project will help _user_ to understand fundamental concepts such as loop, class, function, etc.
@@ -15,7 +16,7 @@ This repository is mainly made for learn Python programming. I made these projec
 3. [Simple to do list](#to-do_list) 
 4. [Webscrapper](#webscrapper)
 5. [Youtube Downloader](#youtube_downloader)
-6. JSON Cache Storage
+6. [Exif Tools](#exif_tools)
 
 ### [Games](#games)
 1. Dice roll simulator
@@ -89,6 +90,16 @@ This folders contains applications & tools that made using vanilla python. Such 
         }
 	```
 
+6. <b><a id="exif_tools">Exif Tools</b>
+	Simple exif tools build using [Pillow](https://pillow.readthedocs.io/en/stable/) and [Piexif](https://piexif.readthedocs.io/en/latest/). Piexif allow user to extract exif data in image. Piexif split exif data into 5 groups :
+
+	- "0th"		: IFD0 - main image tags
+	- "Exif"		: Exif SubIFD
+	- "GPS"	: Gps tags
+	- "1st"		: IFD1 - thumbnail tags
+	- "Interop"	: interopability
+
+	For better understanding, you can read the documentation by [fifi](http://www.fifi.org/doc/jhead/exif-e.html).
 
 ### <a id='games'>Games
 This folder contain silly games that can be played in your terminal or GUI. Contructed using vanilla python.
